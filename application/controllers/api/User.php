@@ -73,12 +73,12 @@ class User extends REST_Controller
         }
     }
 
-    public function index_delete()
+    public function delete_post()
     {
-        $email = $this->delete('email');
-        $deleteUser = $this->user->deleteUser();
+        $id_user = $this->post('id_user');
+        $deleteUser = $this->user->deleteUser($id_user);
 
-        if($email==null){
+        if ($id_user == null) {
             $this->response([
                 'ok' => FALSE,
                 'message' => 'Please provide an email'
@@ -101,7 +101,7 @@ class User extends REST_Controller
 
     public function auth_put()
     {
-        $updateUser = $this->user->editUserForAuth(
+        $updateUser = $this->user->updateUserForAuth(
             $this->put()
         );
 
@@ -121,6 +121,65 @@ class User extends REST_Controller
                 'message' => 'No users were found',
                 'data' => null
             ], REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function register_post()
+    {
+        $dataUser = [
+            'email' => $this->post('email'),
+            'password' => $this->post('password'),
+            'first_name' => $this->post('first_name'),
+            'last_name' => $this->post('last_name'),
+            'no_telp' => $this->post('no_telp'),
+            'sex' => $this->post('sex'),
+            'birth_date' => $this->post('birth_date'),
+            'city' => $this->post('city'),
+            'photo_url' => $this->post('photo_url'),
+            'role' => $this->post('role'),
+            'last_login' => $this->post('last_login'),
+            'type_login' => $this->post('type_login'),
+            'created_at' => $this->post('created_at')
+        ];
+
+        $addUser = $this->user->addUser($dataUser);
+        if ($addUser > 0) {
+
+            $updateUser = $this->user->updateUserForAuth(
+                $dataUser
+            );
+
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'User Added',
+                'data' => $updateUser
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Add',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update_put()
+    {
+        $dataUser = $this->put();
+
+        $updateUser = $this->user->updateUser($dataUser);
+        if ($updateUser > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'User Updated',
+                'data' => $updateUser
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Update',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
 }

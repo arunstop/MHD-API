@@ -15,19 +15,30 @@ class UserModel extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function deleteUser($email)
+    public function deleteUser($id_user)
     {
-        $this->db->delete('ms_user', ['email'=>$email]);
+        $this->db->delete('ms_user', ['id_user'=>$id_user]);
         return $this->db->affected_rows();
     }
 
-    public function editUser($dataArr)
+    public function updateUser($dataArr)
     {
-        $this->db->update('ms_user', array_filter($dataArr, 'strlen'))->result_array();
-        return $this->db->affected_rows();
+        $condition = ['id_user' => $dataArr['id_user']];
+
+        $updateUser = $this->db->update(
+            'ms_user',
+            array_filter($dataArr, 'strlen'),
+            $condition
+        );
+        if ($updateUser == 0) {
+            return null;
+        }
+
+        $getUser = $this->getUser($condition);
+        return $getUser;
     }
 
-    public function editUserForAuth($dataArr)
+    public function updateUserForAuth($dataArr)
     {
         $condition = ['email' => $dataArr['email'], 'password' => $dataArr['password']];
 
