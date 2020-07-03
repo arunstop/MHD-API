@@ -15,7 +15,7 @@ class User extends REST_Controller
         $this->load->model('UserModel', 'user');
     }
 
-    //Menampilkan data kontak
+     
     public function index_get()
     {
 

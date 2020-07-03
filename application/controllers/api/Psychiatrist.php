@@ -15,7 +15,7 @@ class Psychiatrist extends REST_Controller
         $this->load->model('PsychiatristModel', 'psychiatrist');
     }
 
-    //Menampilkan data kontak
+     
     public function show_get()
     {
 

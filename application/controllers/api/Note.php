@@ -15,7 +15,7 @@ class Note extends REST_Controller
         $this->load->model('NoteModel', 'note');
     }
 
-    //Menampilkan data kontak
+     
     public function show_get()
     {
 
