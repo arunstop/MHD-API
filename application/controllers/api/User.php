@@ -16,62 +16,62 @@ class User extends REST_Controller
     }
 
      
-    public function index_get()
-    {
+    // public function index_get()
+    // {
 
-        $showUser = $this->user->getUser(
-            $this->get()
-        );
-        // echo $this->db->last_query();
+    //     $showUser = $this->user->getUser(
+    //         $this->get()
+    //     );
+    //     // echo $this->db->last_query();
 
 
-        if ($showUser) {
-            // Set the response and exit
-            $this->response([
-                'ok' => TRUE,
-                'message' => 'Success',
-                'data' => $showUser
-            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
-        } else {
-            $this->response([
-                'ok' => FALSE,
-                'message' => 'No users were found',
-                'data' => null
-            ], REST_Controller::HTTP_OK);
-        }
-    }
+    //     if ($showUser) {
+    //         // Set the response and exit
+    //         $this->response([
+    //             'ok' => TRUE,
+    //             'message' => 'Success',
+    //             'data' => $showUser
+    //         ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+    //     } else {
+    //         $this->response([
+    //             'ok' => FALSE,
+    //             'message' => 'No users were found',
+    //             'data' => null
+    //         ], REST_Controller::HTTP_OK);
+    //     }
+    // }
 
-    public function index_post()
-    {
+    // public function index_post()
+    // {
 
-        $data = [
-            'email' => $this->post('email'),
-            'password' => $this->post('password'),
-            'first_name' => $this->post('first_name'),
-            'last_name' => $this->post('last_name'),
-            'no_telp' => $this->post('no_telp'),
-            'sex' => $this->post('sex'),
-            'birth_date' => $this->post('birth_date'),
-            'city' => $this->post('city'),
-            'photo_url' => $this->post('photo_url'),
-            'role' => $this->post('role'),
-            'last_login' => $this->post('last_login'),
-            'type_login' => $this->post('type_login'),
-            'created_at' => $this->post('created_at')
-        ];
+    //     $data = [
+    //         'email' => $this->post('email'),
+    //         'password' => $this->post('password'),
+    //         'first_name' => $this->post('first_name'),
+    //         'last_name' => $this->post('last_name'),
+    //         'no_telp' => $this->post('no_telp'),
+    //         'sex' => $this->post('sex'),
+    //         'birth_date' => $this->post('birth_date'),
+    //         'city' => $this->post('city'),
+    //         'photo_url' => $this->post('photo_url'),
+    //         'role' => $this->post('role'),
+    //         'last_login' => $this->post('last_login'),
+    //         'type_login' => $this->post('type_login'),
+    //         'created_at' => $this->post('created_at')
+    //     ];
 
-        if ($this->user->addUser($data) > 0) {
-            $this->response([
-                'ok' => TRUE,
-                'message' => 'User Added'
-            ], REST_Controller::HTTP_CREATED);
-        } else {
-            $this->response([
-                'ok' => FALSE,
-                'message' => 'Failed to Add'
-            ], REST_Controller::HTTP_BAD_REQUEST);
-        }
-    }
+    //     if ($this->user->addUser($data) > 0) {
+    //         $this->response([
+    //             'ok' => TRUE,
+    //             'message' => 'User Added'
+    //         ], REST_Controller::HTTP_CREATED);
+    //     } else {
+    //         $this->response([
+    //             'ok' => FALSE,
+    //             'message' => 'Failed to Add'
+    //         ], REST_Controller::HTTP_BAD_REQUEST);
+    //     }
+    // }
 
     public function delete_post()
     {
@@ -99,10 +99,10 @@ class User extends REST_Controller
     }
     //Masukan function selanjutnya disini
 
-    public function auth_put()
+    public function auth_post()
     {
         $updateUser = $this->user->updateUserForAuth(
-            $this->put()
+            $this->post()
         );
 
         // echo $this->db->last_query();
@@ -163,9 +163,9 @@ class User extends REST_Controller
         }
     }
 
-    public function update_put()
+    public function update_post()
     {
-        $dataUser = $this->put();
+        $dataUser = $this->post();
 
         $updateUser = $this->user->updateUser($dataUser);
         if ($updateUser > 0) {
