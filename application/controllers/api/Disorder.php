@@ -6,31 +6,29 @@ require APPPATH . '/libraries/REST_Controller.php';
 
 use Restserver\Libraries\REST_Controller;
 
-class Psychiatrist extends REST_Controller
+class Disorder extends REST_Controller
 {
 
     function __construct($config = 'rest')
     {
         parent::__construct($config);
-        $this->load->model('PsychiatristModel', 'psychiatrist');
+        $this->load->model('DisorderModel', 'disorder');
     }
-
+    
      
     public function show_get()
     {
-
-        $showPsy = $this->psychiatrist->getPsychiatrist(
-            $this->get()
-        );
+        
+        $showDisorder = $this->disorder->getDisorder($this->get());
         // echo $this->db->last_query();
 
 
-        if ($showPsy) {
+        if ($showDisorder) {
             // Set the response and exit
             $this->response([
                 'ok' => TRUE,
                 'message' => 'Success',
-                'data' => $showPsy
+                'data' => $showDisorder
             ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
         } else {
             $this->response([
@@ -40,6 +38,5 @@ class Psychiatrist extends REST_Controller
             ], REST_Controller::HTTP_OK);
         }
     }
-
     //Masukan function selanjutnya disini
 }

@@ -19,7 +19,7 @@ class Symptom extends REST_Controller
     public function show_get()
     {
         
-        $showSymptom = $this->symptom->getSymptom(null);
+        $showSymptom = $this->symptom->getSymptom($this->get());
         // echo $this->db->last_query();
 
 
