@@ -62,11 +62,11 @@ class TestModel extends CI_Model
         return $getTest;
     }
 
-    public function getTestDetail($dataArr)
+    public function getTestResultDetail($dataArr)
     {
         // array_filter($dataArr, 'strlen')
         // removes all NULL, FALSE and Empty Strings but leaves 0 (zero) values
-        $query = "SELECT ttd.* , mg.NAMA_GEJALA 
+        $query = "SELECT ttd.* , mg.NAMA_GEJALA, mg.PERTANYAAN
         FROM tr_tes_detail AS ttd 
         INNER JOIN tr_gejala_detail AS tgd ON ttd.ID_GEJALA_DETAIL = tgd.ID_GEJALA_DETAIL 
         INNER JOIN ms_gejala AS mg ON tgd.ID_GEJALA = mg.ID_GEJALA 
@@ -98,7 +98,7 @@ class TestModel extends CI_Model
             return null;
         }
 
-        $getTest = $this->getTestDetail($condition);
+        $getTest = $this->getTestResultDetail($condition);
         return $getTest;
     }
 
@@ -170,7 +170,9 @@ class TestModel extends CI_Model
             INNER JOIN ms_penyakit AS mp1 ON tgd1.ID_PENYAKIT =  mp1.ID_PENYAKIT
             WHERE mp1.ID_PENYAKIT = mp.ID_PENYAKIT
             GROUP BY tgd1.ID_PENYAKIT) AS TOTAL_GEJALA, 
-            (count(tgd.ID_GEJALA_DETAIL)/(SELECT TOTAL_GEJALA))*100 AS PERSENTASE_GEJALA
+            (SELECT count(mp.ID_PENYAKIT)
+            FROM ms_penyakit AS mp) AS JUMLAH_PENYAKIT,
+            (count(tgd.ID_GEJALA_DETAIL)/(SELECT TOTAL_GEJALA)/(SELECT JUMLAH_PENYAKIT))*100 AS PERSENTASE_GEJALA
             FROM tr_tes_detail AS ttd
             INNER JOIN tr_gejala_detail AS tgd ON ttd.ID_GEJALA_DETAIL = tgd.ID_GEJALA_DETAIL
             INNER JOIN ms_penyakit AS mp ON tgd.ID_PENYAKIT = mp.ID_PENYAKIT

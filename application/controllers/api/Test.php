@@ -1,5 +1,7 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: GET, OPTIONS");
 defined('BASEPATH') or exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
@@ -29,6 +31,28 @@ class Test extends REST_Controller
                 'ok' => TRUE,
                 'message' => 'Success',
                 'data' => $showTest
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'No data were found',
+                'data' => null
+            ], REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function showFullInfo_get(){
+        $data = $this->get();
+        $showFullInfo = $this->test->getTestFullInfo($data);
+        // echo $this->db->last_query();
+
+
+        if ($showFullInfo) {
+            // Set the response and exit
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Success',
+                'data' => $showFullInfo
             ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
         } else {
             $this->response([
@@ -86,7 +110,6 @@ class Test extends REST_Controller
         $data = [
             'id_tes' => $this->post('id_tes'),
             'result' => $this->post('result'),
-            'last_quiz' => $this->post('last_quiz')
         ];
         $updateTest = $this->test->updateTest(array_filter($data, 'strlen'));
         // echo $this->db->last_query();
@@ -113,10 +136,29 @@ class Test extends REST_Controller
     /////                      DETAIL                            /////
     //////////////////////////////////////////////////////////////////
 
-
-    public function showDetail_get()
+    public function showResult_get()
     {
-        $showDetailTest = $this->test-> getTestDetail($this->get());
+        $data = $this->get();
+        $showTestResult = $this->test->getTestResult($data['id_tes']);
+        if ($showTestResult) {
+            // Set the response and exit
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Success',
+                'data' => $showTestResult
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'No data were found',
+                'data' => null
+            ], REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function showResultDetail_get()
+    {
+        $showDetailTest = $this->test->getTestResultDetail($this->get());
         // echo $this->db->last_query();
 
         if ($showDetailTest) {
@@ -184,66 +226,27 @@ class Test extends REST_Controller
         }
     }
 
-    public function showFullInfo_get(){
-        $data = $this->get();
-        $showFullInfo = $this->test->getTestFullInfo($data);
-        // echo $this->db->last_query();
-
-
-        if ($showFullInfo) {
-            // Set the response and exit
-            $this->response([
-                'ok' => TRUE,
-                'message' => 'Success',
-                'data' => $showFullInfo
-            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
-        } else {
-            $this->response([
-                'ok' => FALSE,
-                'message' => 'No data were found',
-                'data' => null
-            ], REST_Controller::HTTP_OK);
-        }
-    }
     //Masukan function selanjutnya disini
 
-    public function showLatestQuiz_get()
-    {
-        $data = $this->get();
-        $showLatestQuiz = $this->test->getLatestQuiz($data['id_tes']);
-        if ($showLatestQuiz) {
-            // Set the response and exit
-            $this->response([
-                'ok' => TRUE,
-                'message' => 'Success',
-                'data' => $showLatestQuiz
-            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
-        } else {
-            $this->response([
-                'ok' => FALSE,
-                'message' => 'No data were found',
-                'data' => null
-            ], REST_Controller::HTTP_OK);
-        }
-    }
+    // public function showLatestQuiz_get()
+    // {
+    //     $data = $this->get();
+    //     $showLatestQuiz = $this->test->getLatestQuiz($data['id_tes']);
+    //     if ($showLatestQuiz) {
+    //         // Set the response and exit
+    //         $this->response([
+    //             'ok' => TRUE,
+    //             'message' => 'Success',
+    //             'data' => $showLatestQuiz
+    //         ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+    //     } else {
+    //         $this->response([
+    //             'ok' => FALSE,
+    //             'message' => 'No data were found',
+    //             'data' => null
+    //         ], REST_Controller::HTTP_OK);
+    //     }
+    // }
 
-    public function showTestResult_get()
-    {
-        $data = $this->get();
-        $showTestResult = $this->test->getTestResult($data['id_tes']);
-        if ($showTestResult) {
-            // Set the response and exit
-            $this->response([
-                'ok' => TRUE,
-                'message' => 'Success',
-                'data' => $showTestResult
-            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
-        } else {
-            $this->response([
-                'ok' => FALSE,
-                'message' => 'No data were found',
-                'data' => null
-            ], REST_Controller::HTTP_OK);
-        }
-    }
+
 }
