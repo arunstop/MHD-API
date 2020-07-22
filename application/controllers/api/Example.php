@@ -1,7 +1,9 @@
 <?php
 
 header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Methods: GET, OPTIONS");
+header('Access-Control-Allow-Credentials: true');
+header("Access-Control-Allow-Methods: *");
+header('Access-Control-Allow-Headers: *');
 defined('BASEPATH') or exit('No direct script access allowed');
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions

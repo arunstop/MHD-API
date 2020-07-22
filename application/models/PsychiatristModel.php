@@ -9,15 +9,15 @@ class PsychiatristModel extends CI_Model
         return $this->db->get_where('ms_ahli', array_filter($dataArr, 'strlen'))->result_array();
     }
 
-    public function addNote($dataArr)
+    public function addPsychiatrist($dataArr)
     {
-        $this->db->insert('ms_catatan', $dataArr);
+        $this->db->insert('ms_ahli', $dataArr);
         return $this->db->affected_rows();
     }
 
-    public function deleteNote($id)
+    public function deletePsychiatrist($id)
     {
-        $this->db->delete('ms_catatan', ['id_catatan'=>$id]);
+        $this->db->delete('ms_ahli', ['id_ahli'=>$id]);
         return $this->db->affected_rows();
     }
 }

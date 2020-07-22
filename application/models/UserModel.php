@@ -44,9 +44,11 @@ class UserModel extends CI_Model
 
         $updateUser = $this->db->update(
             'ms_user',
-            ['last_login' => $dataArr['last_login'],'type_login' => $dataArr['type_login']],
+            ['last_login' => date('Y-m-d H:i:s'),'type_login' => $dataArr['type_login']],
             $condition
         );
+        // die;
+        
         if ($updateUser == 0) {
             return null;
         }
