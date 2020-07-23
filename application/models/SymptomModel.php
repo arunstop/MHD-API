@@ -36,9 +36,26 @@ class SymptomModel   extends CI_Model
         return $this->db->affected_rows();
     }
 
-    // public function deleteNote($id)
-    // {
-    //     $this->db->delete('ms_catatan', ['id_catatan'=>$id]);
-    //     return $this->db->affected_rows();
-    // }
+    public function deleteSymptom($id)
+    {
+        $this->db->delete('ms_gejala', ['id_gejala'=>$id]);
+        return $this->db->affected_rows();
+    }
+
+    public function updateSymptom($dataArr)
+    {
+        $condition = ['id_gejala' => $dataArr['id_gejala']];
+
+        $updateSymptom = $this->db->update(
+            'ms_gejala',
+            array_filter($dataArr, 'strlen'),
+            $condition
+        );
+        if ($updateSymptom == 0) {
+            return null;
+        }
+
+        $getUser = $this->getSymptom($condition);
+        return $getUser;
+    }
 }

@@ -81,5 +81,42 @@ class Psychiatrist extends REST_Controller
         }
     }
 
+    public function delete_post()
+    {
+        $id = $this->post('id_ahli');
+        $deleteExpert = $this->psychiatrist->deletePsychiatrist($id);
+        if ($deleteExpert > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Expert Deleted'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Delete'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update_post()
+    {
+        $data = $this->post();
+
+        $updatePsychiatrist = $this->psychiatrist->updatePsychiatrist($data);
+        if ($updatePsychiatrist > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Expert Updated',
+                'data' => $updatePsychiatrist
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Update',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
     //Masukan function selanjutnya disini
 }

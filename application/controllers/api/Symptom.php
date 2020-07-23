@@ -95,5 +95,42 @@ class Symptom extends REST_Controller
             ], REST_Controller::HTTP_OK);
         }
     }
+
+    public function delete_post()
+    {
+        $id = $this->post('id_gejala');
+        $deleteSymptom = $this->symptom->deleteSymptom($id);
+        if ($deleteSymptom > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Symptom Deleted'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Delete'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update_post()
+    {
+        $data = $this->post();
+
+        $updateSymptom = $this->symptom->updateSymptom($data);
+        if ($updateSymptom > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Symptom Updated',
+                'data' => $updateSymptom
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Update',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
     //Masukan function selanjutnya disini
 }

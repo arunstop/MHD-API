@@ -14,4 +14,26 @@ class DisorderModel extends CI_Model
         return $this->db->affected_rows();
     }
 
+    public function deleteDisorder($id)
+    {
+        $this->db->delete('ms_penyakit', ['id_penyakit'=>$id]);
+        return $this->db->affected_rows();
+    }
+
+    public function updateDisorder($dataArr)
+    {
+        $condition = ['id_penyakit' => $dataArr['id_penyakit']];
+
+        $updateDisorder = $this->db->update(
+            'ms_penyakit',
+            array_filter($dataArr, 'strlen'),
+            $condition
+        );
+        if ($updateDisorder == 0) {
+            return null;
+        }
+
+        $getUser = $this->getDisorder($condition);
+        return $getUser;
+    }
 }

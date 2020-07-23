@@ -74,5 +74,42 @@ class Disorder extends REST_Controller
             ], REST_Controller::HTTP_OK);
         }
     }
+
+    public function delete_post()
+    {
+        $id = $this->post('id_penyakit');
+        $deleteDisorder = $this->disorder->deleteDisorder($id);
+        if ($deleteDisorder > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Disorder Deleted'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Delete'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update_post()
+    {
+        $data = $this->post();
+
+        $updateDisorder = $this->disorder->updateDisorder($data);
+        if ($updateDisorder > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Disorder Updated',
+                'data' => $updateDisorder
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Update',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
     //Masukan function selanjutnya disini
 }
