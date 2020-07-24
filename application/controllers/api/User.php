@@ -128,6 +128,31 @@ class User extends REST_Controller
         }
     }
 
+    public function auth_get()
+    {
+        $updateUser = $this->user->updateUserForAuth(
+            $this->get()
+        );
+
+        // echo $this->db->last_query();
+        // echo "============".$updateUser;
+
+        if ($updateUser) {
+            // Set the response and exit
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Success',
+                'data' => $updateUser
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'No users were found',
+                'data' => null
+            ], REST_Controller::HTTP_OK);
+        }
+    }
+
     public function register_post()
     {
         $dataUser = [

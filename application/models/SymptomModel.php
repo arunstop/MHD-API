@@ -20,12 +20,13 @@ class SymptomModel   extends CI_Model
         $this->db->join('ms_penyakit as mp', 'tgd.ID_PENYAKIT= mp.ID_PENYAKIT');
         $this->db->where(array_filter($dataArr, 'strlen'));
         $this->db->order_by('mg.ID_GEJALA');
-        
+
         $query = $this->db->get();
         return $query->result_array();
     }
 
-    public function getSymptom($dataArr){
+    public function getSymptom($dataArr)
+    {
         $query = $this->db->get_where('ms_gejala', $dataArr);
         return $query->result_array();
     }
@@ -38,14 +39,13 @@ class SymptomModel   extends CI_Model
 
     public function deleteSymptom($id)
     {
-        $this->db->delete('ms_gejala', ['id_gejala'=>$id]);
+        $this->db->delete('ms_gejala', ['id_gejala' => $id]);
         return $this->db->affected_rows();
     }
 
     public function updateSymptom($dataArr)
     {
         $condition = ['id_gejala' => $dataArr['id_gejala']];
-
         $updateSymptom = $this->db->update(
             'ms_gejala',
             array_filter($dataArr, 'strlen'),
@@ -57,5 +57,23 @@ class SymptomModel   extends CI_Model
 
         $getUser = $this->getSymptom($condition);
         return $getUser;
+    }
+
+    public function getRule()
+    {
+        $query = "SELECT 
+        mp.NAMA_PENYAKIT, GROUP_CONCAT(mg.NAMA_GEJALA) AS RULE
+        FROM tr_gejala_detail AS tgd 
+        INNER JOIN ms_gejala AS mg ON tgd.ID_GEJALA = mg.ID_GEJALA 
+        INNER JOIN ms_penyakit AS mp ON tgd.ID_PENYAKIT = mp.ID_PENYAKIT 
+        GROUP BY tgd.ID_PENYAKIT ORDER BY mp.ID_PENYAKIT";
+
+        return $this->db->query($query)->result_array();
+    }
+
+    public function addRule($dataArr)
+    {
+        $this->db->insert('tr_gejala_detail', $dataArr);
+        return $this->db->affected_rows();
     }
 }

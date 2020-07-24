@@ -20,7 +20,7 @@ class Psychiatrist extends REST_Controller
     }
 
 
-    public function add_post()
+    public function add_post()//unused
     {
 
         $data = [
@@ -29,6 +29,42 @@ class Psychiatrist extends REST_Controller
             'address' => $this->post('address'),
             'description' => $this->post('description'),
             'photo_url' => $this->post('photo_url'),
+        ];
+
+        $addPsychiatrist = $this->psychiatrist->addPsychiatrist($data);
+
+        if ($addPsychiatrist > 0) {
+            //removing judul_catatan and isi_catatan to reduce query time
+            // $showNote = $this->note->getNote(
+            //     [
+            //         'id_user' => $data['id_user'],
+            //         'created_at' => $data['created_at']
+            //     ]
+            // );
+            // if ($showNote) {
+
+            // }
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Expert Added',
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Add',
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function add_get()
+    {
+
+        $data = [
+            'nama_ahli' => $this->get('nama_ahli'),
+            'no_telp_ahli' => $this->get('no_telp_ahli'),
+            'address' => $this->get('address'),
+            'description' => $this->get('description'),
+            'photo_url' => $this->get('photo_url'),
         ];
 
         $addPsychiatrist = $this->psychiatrist->addPsychiatrist($data);
@@ -98,9 +134,47 @@ class Psychiatrist extends REST_Controller
         }
     }
 
+    public function delete_get()
+    {
+        $id = $this->get('id_ahli');
+        $deleteExpert = $this->psychiatrist->deletePsychiatrist($id);
+        if ($deleteExpert > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Expert Deleted'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Delete'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+
     public function update_post()
     {
         $data = $this->post();
+
+        $updatePsychiatrist = $this->psychiatrist->updatePsychiatrist($data);
+        if ($updatePsychiatrist > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Expert Updated',
+                'data' => $updatePsychiatrist
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Update',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update_get()
+    {
+        $data = $this->get();
 
         $updatePsychiatrist = $this->psychiatrist->updatePsychiatrist($data);
         if ($updatePsychiatrist > 0) {

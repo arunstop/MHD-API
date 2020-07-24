@@ -52,6 +52,38 @@ class Disorder extends REST_Controller
         }
     }
 
+    public function add_get()
+    {
+        $data = [
+            'nama_penyakit' => $this->get('nama_penyakit'),
+            'informasi' => $this->get('informasi'),
+        ];
+
+        $addDisorder = $this->disorder->addDisorder($data);
+
+        if ($addDisorder > 0) {
+            //removing judul_catatan and isi_catatan to reduce query time
+            // $showNote = $this->note->getNote(
+            //     [
+            //         'id_user' => $data['id_user'],
+            //         'created_at' => $data['created_at']
+            //     ]
+            // );
+            // if ($showNote) {
+               
+            // }
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Disorder Added',
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Add',
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function show_get()
     {
         
@@ -92,9 +124,46 @@ class Disorder extends REST_Controller
         }
     }
 
+    public function delete_get()
+    {
+        $id = $this->get('id_penyakit');
+        $deleteDisorder = $this->disorder->deleteDisorder($id);
+        if ($deleteDisorder > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Disorder Deleted'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Delete'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function update_post()
     {
         $data = $this->post();
+
+        $updateDisorder = $this->disorder->updateDisorder($data);
+        if ($updateDisorder > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Disorder Updated',
+                'data' => $updateDisorder
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'Failed to Update',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update_get()
+    {
+        $data = $this->get();
 
         $updateDisorder = $this->disorder->updateDisorder($data);
         if ($updateDisorder > 0) {
