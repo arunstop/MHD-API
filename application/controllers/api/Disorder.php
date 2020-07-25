@@ -109,8 +109,11 @@ class Disorder extends REST_Controller
 
     public function delete_post()
     {
-        $id = $this->post('id_penyakit');
-        $deleteDisorder = $this->disorder->deleteDisorder($id);
+        $data = [
+            'id_penyakit' =>$this->post('id_penyakit'),
+            'status' => 0
+        ];
+        $deleteDisorder = $this->disorder->softDeleteDisorder($data);
         if ($deleteDisorder > 0) {
             $this->response([
                 'ok' => TRUE,

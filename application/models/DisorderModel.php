@@ -16,8 +16,27 @@ class DisorderModel extends CI_Model
 
     public function deleteDisorder($id)
     {
-        $this->db->delete('ms_penyakit', ['id_penyakit'=>$id]);
+        $this->db->delete('ms_penyakit', ['id_penyakit' => $id]);
         return $this->db->affected_rows();
+    }
+
+    public function softDeleteDisorder($dataArr)
+    {
+
+        $condition = ['id_penyakit' => $dataArr['id_penyakit']];
+        $set = ['status' => $dataArr['status']];
+
+        $updateDisorder = $this->db->update(
+            'ms_penyakit',
+            $set,
+            $condition
+        );
+        if ($updateDisorder == 0) {
+            return null;
+        }
+
+        $getUser = $this->getDisorder($condition);
+        return $getUser;
     }
 
     public function updateDisorder($dataArr)

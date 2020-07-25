@@ -103,7 +103,7 @@ class Symptom extends REST_Controller
         } else {
             $this->response([
                 'ok' => FALSE,
-                'message' => 'No users were found',
+                'message' => 'No data were found',
                 'data' => null
             ], REST_Controller::HTTP_OK);
         }
@@ -125,7 +125,7 @@ class Symptom extends REST_Controller
         } else {
             $this->response([
                 'ok' => FALSE,
-                'message' => 'No users were found',
+                'message' => 'No data were found',
                 'data' => null
             ], REST_Controller::HTTP_OK);
         }
@@ -212,14 +212,10 @@ class Symptom extends REST_Controller
         // echo $this->db->last_query();
 
         if ($showRule) {
-            // $r = $showRule['RULE'];
-            // $str = "Berpikiran untuk mengakhiri hidup,Mudah marah/tersinggung(sensitif),Sulit/kurang konsentrasi,Pikiran kacau,Merasa cemas,Kehilangan minat pada segala hal,Kehilangan motivasi,Menghindari sosialisasi/mengasingkan diri,Tidak ada gairah seksual,Menurunnya performa pekerjaan,Merasa khawatir,Merasa sakit/nyeri/gatal yang tidak bisa dijelaskan,Merasa bersalah,Berpikiran untuk mengakhiri hidup,Sulit untuk tidur atau tidur nyenyak,Kehilangan energi,Mengabaikan/melalaikan minat dan hobi,Merasa pesimis/tidak berdaya terhadap segala hal,Merasa mudah/ingin menangis,Tidak dapat menikmati hidup,Sulit untuk membuat keputusan,Merasa intoleran,Merasa tidak ada harapan,Harga diri rendah,Berpikiran untuk menyakiti diri,Pergerakan tubuh lebih lambat dari biasanya,Perubahan nafsu makan,Perubahan berat badan,Sembelit,Mengalami kesulitan dalam keluarga";
-            $arr =[];
-
             foreach ($showRule as &$sr) {
                 // '&' passes a value of the array as a reference and does not create a new instance of the variable. 
                 // Thus if you change the reference the original value will change.
-                $sr['RULE'] = explode(",", $sr['RULE']);
+                $sr['RULE'] = explode("||", $sr['RULE']);
             }
             // var_dump($showRule);die;
             // Set the response and exit
@@ -231,7 +227,7 @@ class Symptom extends REST_Controller
         } else {
             $this->response([
                 'ok' => FALSE,
-                'message' => 'No users were found',
+                'message' => 'No data were found',
                 'data' => null
             ], REST_Controller::HTTP_OK);
         }
@@ -254,7 +250,33 @@ class Symptom extends REST_Controller
         } else {
             $this->response([
                 'ok' => FALSE,
-                'message' => 'Failed to Add',
+                'message' => 'Failed to Add, rule already exists',
+            ], REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function showQuestionnaire_get()
+    {
+        $data = $this->get();
+
+        $showQuestionnaire = $this->symptom->showQuestionnaire($data);
+        if ($showQuestionnaire > 0) {
+            foreach ($showQuestionnaire as &$sq) {
+                // '&' passes a value of the array as a reference and does not create a new instance of the variable. 
+                // Thus if you change the reference the original value will change.
+                $sq['DAFTAR_PENYAKIT'] = explode("||", $sq['DAFTAR_PENYAKIT']);
+            }
+
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Success',
+                'data' => $showQuestionnaire
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'No data were found',
+                'data' => null
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }

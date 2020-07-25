@@ -176,7 +176,7 @@ class TestModel extends CI_Model
             FROM tr_tes_detail AS ttd
             INNER JOIN tr_gejala_detail AS tgd ON ttd.ID_GEJALA_DETAIL = tgd.ID_GEJALA_DETAIL
             INNER JOIN ms_penyakit AS mp ON tgd.ID_PENYAKIT = mp.ID_PENYAKIT
-            WHERE ttd.ID_TES = {$id_test}
+            WHERE ttd.ID_TES = {$id_test} AND mp.STATUS = 1
             GROUP BY tgd.ID_PENYAKIT, ttd.ID_TES
             ORDER BY PERSENTASE_GEJALA DESC, mp.ID_PENYAKIT ASC";
 

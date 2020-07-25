@@ -62,10 +62,11 @@ class SymptomModel   extends CI_Model
     public function getRule()
     {
         $query = "SELECT 
-        mp.NAMA_PENYAKIT, GROUP_CONCAT(mg.NAMA_GEJALA) AS RULE
+        mp.NAMA_PENYAKIT, GROUP_CONCAT(mg.NAMA_GEJALA SEPARATOR '||') AS RULE
         FROM tr_gejala_detail AS tgd 
         INNER JOIN ms_gejala AS mg ON tgd.ID_GEJALA = mg.ID_GEJALA 
         INNER JOIN ms_penyakit AS mp ON tgd.ID_PENYAKIT = mp.ID_PENYAKIT 
+        WHERE mp.STATUS = 1
         GROUP BY tgd.ID_PENYAKIT ORDER BY mp.ID_PENYAKIT";
 
         return $this->db->query($query)->result_array();
@@ -73,7 +74,37 @@ class SymptomModel   extends CI_Model
 
     public function addRule($dataArr)
     {
+
+
+        $this->db->get_where('tr_gejala_detail', $dataArr);
+
+        if($this->db->affected_rows()!=0){
+            // return ", Duplicated rule";
+            return null;
+        }
+
         $this->db->insert('tr_gejala_detail', $dataArr);
         return $this->db->affected_rows();
+    }
+
+    public function showQuestionnaire(){
+
+        $query = "SELECT 
+        tgd.ID_GEJALA_DETAIL AS ID_GEJALA_DETAIL,
+        mp.ID_PENYAKIT AS ID_PENYAKIT,
+        mg.ID_GEJALA AS ID_GEJALA,
+        mg.PERTANYAAN AS PERTANYAAN,
+        TGD.ID_GEJALA_DETAIL AS ID_GEJALA_DETAIL,
+        mg.NAMA_GEJALA AS NAMA_GEJALA,
+        MAX(tgd.YES) AS YES,
+        MAX(tgd.NO) AS NO, 
+        GROUP_CONCAT(mp.NAMA_PENYAKIT SEPARATOR '||') AS DAFTAR_PENYAKIT 
+        FROM (select * from tr_gejala_detail ORDER BY ID_GEJALA DESC) AS tgd 
+        INNER JOIN ms_gejala AS mg ON tgd.ID_GEJALA = mg.ID_GEJALA 
+        INNER JOIN ms_penyakit AS mp ON tgd.ID_PENYAKIT = mp.ID_PENYAKIT 
+        WHERE mp.STATUS = 1
+        GROUP BY tgd.ID_GEJALA";
+
+        return $this->db->query($query)->result_array();
     }
 }
