@@ -94,7 +94,7 @@ class SymptomModel   extends CI_Model
         mp.ID_PENYAKIT AS ID_PENYAKIT,
         mg.ID_GEJALA AS ID_GEJALA,
         mg.PERTANYAAN AS PERTANYAAN,
-        TGD.ID_GEJALA_DETAIL AS ID_GEJALA_DETAIL,
+        tgd.ID_GEJALA_DETAIL AS ID_GEJALA_DETAIL,
         mg.NAMA_GEJALA AS NAMA_GEJALA,
         MAX(tgd.YES) AS YES,
         MAX(tgd.NO) AS NO, 

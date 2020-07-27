@@ -105,8 +105,16 @@ class User extends REST_Controller
 
     public function auth_post()
     {
+
+        $data = [
+            'email' => $this->post('email'),
+            'password' => md5($this->post('password')),
+            'type_login' => $this->post('type_login'),
+            'last_login' => $this->post('last_login')
+        ];
+
         $updateUser = $this->user->updateUserForAuth(
-            $this->post()
+            $data
         );
 
         // echo $this->db->last_query();
@@ -157,7 +165,7 @@ class User extends REST_Controller
     {
         $dataUser = [
             'email' => $this->post('email'),
-            'password' => $this->post('password'),
+            'password' => md5($this->post('password')),
             'first_name' => $this->post('first_name'),
             'last_name' => $this->post('last_name'),
             'no_telp' => $this->post('no_telp'),
@@ -195,6 +203,7 @@ class User extends REST_Controller
     public function update_post()
     {
         $dataUser = $this->post();
+        $dataUser['password'] = md5($dataUser['password']);
 
         $updateUser = $this->user->updateUser($dataUser);
         if ($updateUser > 0) {

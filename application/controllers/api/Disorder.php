@@ -18,13 +18,14 @@ class Disorder extends REST_Controller
         parent::__construct($config);
         $this->load->model('DisorderModel', 'disorder');
     }
-    
-     
+
+
     public function add_post()
     {
         $data = [
             'nama_penyakit' => $this->post('nama_penyakit'),
             'informasi' => $this->post('informasi'),
+            'status' => 1,
         ];
 
         $addDisorder = $this->disorder->addDisorder($data);
@@ -38,7 +39,7 @@ class Disorder extends REST_Controller
             //     ]
             // );
             // if ($showNote) {
-               
+
             // }
             $this->response([
                 'ok' => TRUE,
@@ -57,6 +58,7 @@ class Disorder extends REST_Controller
         $data = [
             'nama_penyakit' => $this->get('nama_penyakit'),
             'informasi' => $this->get('informasi'),
+            'status' => 1,
         ];
 
         $addDisorder = $this->disorder->addDisorder($data);
@@ -70,7 +72,7 @@ class Disorder extends REST_Controller
             //     ]
             // );
             // if ($showNote) {
-               
+
             // }
             $this->response([
                 'ok' => TRUE,
@@ -86,7 +88,7 @@ class Disorder extends REST_Controller
 
     public function show_get()
     {
-        
+
         $showDisorder = $this->disorder->getDisorder($this->get());
         // echo $this->db->last_query();
 
@@ -110,7 +112,7 @@ class Disorder extends REST_Controller
     public function delete_post()
     {
         $data = [
-            'id_penyakit' =>$this->post('id_penyakit'),
+            'id_penyakit' => $this->post('id_penyakit'),
             'status' => 0
         ];
         $deleteDisorder = $this->disorder->softDeleteDisorder($data);

@@ -107,7 +107,7 @@ class TestModel extends CI_Model
         $query = "SELECT tt.ID_TES, tt.RESULT, tt.ID_USER, tt.CREATED_AT, mp.NAMA_PENYAKIT 
         FROM tr_tes AS tt 
         INNER JOIN ms_penyakit AS mp ON tt.result = mp.id_penyakit 
-        INNER JOIN tr_gejala_detail AS tgd ON tt.last_quiz = tgd.id_gejala_detail 
+        -- INNER JOIN tr_gejala_detail AS tgd ON tt.last_quiz = tgd.id_gejala_detail 
         WHERE tt.id_user = {$dataArr['id_user']} 
         ORDER BY tt.created_at DESC
         ";
