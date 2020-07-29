@@ -78,7 +78,7 @@ class SymptomModel   extends CI_Model
 
         $this->db->get_where('tr_gejala_detail', $dataArr);
 
-        if($this->db->affected_rows()!=0){
+        if ($this->db->affected_rows() != 0) {
             // return ", Duplicated rule";
             return null;
         }
@@ -87,8 +87,8 @@ class SymptomModel   extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function showQuestionnaire(){
-
+    public function showQuestionnaire()
+    {
         $query = "SELECT 
         tgd.ID_GEJALA_DETAIL AS ID_GEJALA_DETAIL,
         mp.ID_PENYAKIT AS ID_PENYAKIT,
@@ -106,5 +106,78 @@ class SymptomModel   extends CI_Model
         GROUP BY tgd.ID_GEJALA";
 
         return $this->db->query($query)->result_array();
+    }
+
+    public function showQuestionnaireLite()
+    {
+        $query = "SELECT 
+        tgd.ID_GEJALA_DETAIL AS ID_GEJALA_DETAIL,
+        mg.ID_GEJALA AS ID_GEJALA,
+        mg.PERTANYAAN AS PERTANYAAN,
+        mp.NAMA_PENYAKIT AS NAMA_PENYAKIT
+        FROM tr_gejala_detail AS tgd 
+        INNER JOIN ms_gejala AS mg ON tgd.ID_GEJALA = mg.ID_GEJALA 
+        INNER JOIN ms_penyakit AS mp ON tgd.ID_PENYAKIT = mp.ID_PENYAKIT 
+        WHERE mp.STATUS = 1
+        GROUP BY tgd.ID_GEJALA
+        ORDER BY tgd.ID_GEJALA_DETAIL";
+
+        return $this->db->query($query)->result_array();
+    }
+
+
+    public function addMap($dataArr)
+    {
+        $igd = $dataArr['id_gejala_detail'];
+        $ig = $dataArr['id_gejala'];
+        $y = $dataArr['yes'];
+        $n = $dataArr['no'];
+
+        $qUpdate="";
+        //update questions:
+        // 1. searching the same row with id_gejala
+        // 2. then count
+        $qCount = "SELECT COUNT(tgd.ID_GEJALA_DETAIL) AS COUNT FROM tr_gejala_detail AS tgd WHERE tgd.ID_GEJALA = $ig";
+        $count = $this->db->query($qCount)->row()->COUNT;
+
+        $igdNext = $igd;
+
+
+        // 3. then getting next the id_gejala_detail with mapGetId()
+        // 4. then update it as much as $count counts
+        for ($i = 1; $i <= $count; $i++) {
+            $igdNow = $igdNext;
+            $igdNext = $this->mapGetId($ig, $i);
+            // .= is to concatenate string update
+            if ($igdNext == null || $igdNext == "") {
+                $qUpdate = "UPDATE tr_gejala_detail SET YES = $y, NO = $n WHERE ID_GEJALA_DETAIL = $igdNow;";
+                $this->db->query($qUpdate);
+                // echo $qUpdate+"\n";
+            } else {
+                $qUpdate = "UPDATE tr_gejala_detail SET YES = $igdNext, NO = $igdNext WHERE ID_GEJALA_DETAIL = $igdNow;";
+                $this->db->query($qUpdate);
+                // echo $qUpdate+"\n";
+            }
+        }
+        return $this->db->affected_rows();
+        // die;
+
+    }
+
+    //Getting id for the 'yes'/'no' column
+    public function mapGetId($id_gejala, $offset)
+    {
+
+        $q = "SELECT tgd.ID_GEJALA_DETAIL AS ID
+        FROM tr_gejala_detail AS tgd 
+        INNER JOIN ms_gejala AS mg ON tgd.ID_GEJALA = mg.ID_GEJALA 
+        INNER JOIN ms_penyakit AS mp ON tgd.ID_PENYAKIT = mp.ID_PENYAKIT 
+        WHERE tgd.ID_GEJALA = $id_gejala LIMIT 1 OFFSET $offset";
+
+        $result = $this->db->query($q)->row();
+        if ($result == null) {
+            return null;
+        }
+        return $result->ID;
     }
 }

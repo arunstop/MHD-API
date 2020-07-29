@@ -56,4 +56,24 @@ class UserModel extends CI_Model
         $getUser = $this->getUser($condition);
         return $getUser;
     }
+
+    public function updateUserForAuthGoogle($dataArr)
+    {
+        $condition = ['email' => $dataArr['email']];
+
+        $updateUser = $this->db->update(
+            'ms_user',
+            ['last_login' => date('Y-m-d H:i:s'),'type_login' => $dataArr['type_login']],
+            $condition
+        );
+        // die;
+        
+        if ($this->db->affected_rows() == 0) {
+            $this->addUser($dataArr);
+            // return null;
+        }
+
+        $getUser = $this->getUser($condition);
+        return $getUser;
+    }
 }

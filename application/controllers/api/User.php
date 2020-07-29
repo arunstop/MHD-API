@@ -220,4 +220,46 @@ class User extends REST_Controller
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
+
+    public function authGoogle_post()
+    {
+
+        $dataUser = [
+            'email' => $this->post('email'),
+            'password' => md5($this->post('password')),
+            'first_name' => $this->post('first_name'),
+            'last_name' => $this->post('last_name'),
+            'no_telp' => $this->post('no_telp'),
+            'sex' => $this->post('sex'),
+            'birth_date' => $this->post('birth_date'),
+            'city' => $this->post('city'),
+            'photo_url' => $this->post('photo_url'),
+            'role' => $this->post('role'),
+            'last_login' => $this->post('last_login'),
+            'type_login' => $this->post('type_login'),
+            'created_at' => $this->post('created_at')
+        ];
+
+        $updateUserGoogle = $this->user->updateUserForAuthGoogle(
+            $dataUser
+        );
+
+        // echo $this->db->last_query();
+        // echo "============".$updateUserGoogle;
+
+        if ($updateUserGoogle) {
+            // Set the response and exit
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Success',
+                'data' => $updateUserGoogle
+            ], REST_Controller::HTTP_OK); // NOT_FOUND (404) being the HTTP response code
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'No users were found',
+                'data' => null
+            ], REST_Controller::HTTP_OK);
+        }
+    }
 }

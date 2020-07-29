@@ -280,5 +280,44 @@ class Symptom extends REST_Controller
             ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
+
+    public function showQuestionnaireLite_get(){
+        $data = $this->get();
+
+        $showQuestionnaire = $this->symptom->showQuestionnaireLite($data);
+        if ($showQuestionnaire > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Success',
+                'data' => $showQuestionnaire
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'No data were found',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function addMap_post(){
+        $data = $this->post();
+
+        $AddMap = $this->symptom->AddMap($data);
+        if ($AddMap > 0) {
+            $this->response([
+                'ok' => TRUE,
+                'message' => 'Success',
+                'data' => $AddMap
+            ], REST_Controller::HTTP_CREATED);
+        } else {
+            $this->response([
+                'ok' => FALSE,
+                'message' => 'No data were found',
+                'data' => null
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    }
+
     //Masukan function selanjutnya disini
 }

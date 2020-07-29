@@ -6,7 +6,29 @@ class ArticleModel extends CI_Model
     {
         // array_filter($dataArr, 'strlen')
         // removes all NULL, FALSE and Empty Strings but leaves 0 (zero) values
-        return $this->db->get_where('ms_artikel', array_filter($dataArr, 'strlen'))->result_array();
+
+        // getting limit and offset from parameter get method
+        // then removing it from array so the limit and offset arrays
+        // will be excluded from the where condition
+        $limit = null;
+        $offset = null;
+
+        if (isset($dataArr['limit'])) {
+            $limit = $dataArr['limit'];
+            unset($dataArr['limit']);
+        }
+        if (isset($dataArr['offset'])) {
+            $offset = $dataArr['offset'];
+            unset($dataArr['offset']);
+        }
+        return $this->db
+            ->order_by('created_at', 'DESC')
+            ->get_where(
+                'ms_artikel',
+                array_filter($dataArr, 'strlen'),
+                $limit,
+                $offset
+            )->result_array();
     }
 
     public function addArticle($dataArr)
@@ -17,7 +39,7 @@ class ArticleModel extends CI_Model
 
     public function deleteArticle($id)
     {
-        $this->db->delete('ms_artikel', ['id_artikel'=>$id]);
+        $this->db->delete('ms_artikel', ['id_artikel' => $id]);
         return $this->db->affected_rows();
     }
 
